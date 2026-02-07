@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>FactHub API Test</title>
+</head>
+<body>
+    <h1>Testing Backend Connection</h1>
+    <p>Click the button to test if backend is accessible:</p>
+    <button onclick="testAPI()">Test Backend API</button>
+    <div id="result" style="margin-top: 20px; padding: 20px; background: #f0f0f0;"></div>
+
+    <script>
+        function testAPI() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = '<p>Testing...</p>';
+
+            fetch('http://localhost:8000/api/facts')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('HTTP error! status: ' + response.status);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    resultDiv.innerHTML = `
+                        <h2 style="color: green;">✅ SUCCESS!</h2>
+                        <p><strong>Backend is working!</strong></p>
+                        <p><strong>Data received:</strong></p>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    `;
+                })
+                .catch(error => {
+                    resultDiv.innerHTML = `
+                        <h2 style="color: red;">❌ ERROR!</h2>
+                        <p><strong>Error:</strong> ${error.message}</p>
+                        <p><strong>Possible causes:</strong></p>
+                        <ul>
+                            <li>Backend is not running on port 8000</li>
+                            <li>CORS is not configured</li>
+                            <li>Firewall blocking connection</li>
+                        </ul>
+                    `;
+                });
+        }
+    </script>
+</body>
+</html>
